@@ -8,4 +8,5 @@ import (
 
 func main() {
 	log.Println("Two_Sum_easy1: ", twosum.TwoSum_easy1())
+	log.Println("TwoSum_SortedArr: ", twosum.TwoSum_SortedArr())
 }
