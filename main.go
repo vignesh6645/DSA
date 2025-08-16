@@ -7,6 +7,5 @@ import (
 )
 
 func main() {
-	log.Println("Hi.!")
 	log.Println("Two_Sum_easy1: ", twosum.TwoSum_easy1())
 }
