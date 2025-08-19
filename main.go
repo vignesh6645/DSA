@@ -12,4 +12,5 @@ func main() {
 	log.Println("MoveZeroes: ", twosum.MoveZeroes())
 	log.Println("MajorityElement: ", twosum.MajorityElement())
 	log.Println("TwoSum: ", twosum.RemoveDuplicates())
+	log.Println("Merge Sorted Array: ", twosum.Merge())
 }

@@ -1,8 +1,12 @@
 package twosum
 
+import "log"
+
 var (
-	nums   = []int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}
-	target = 9
+	nums   = []int{2, 3, 4}
+	target = 6
+	nums1  = []int{1, 2, 3, 0, 0, 0}
+	nums2  = []int{2, 5, 6}
 )
 
 type TwoSumInter interface {
@@ -17,7 +21,7 @@ func TwoSum_easy1() []int {
 	for i, num := range nums {
 		diff := target - num
 		if j, ok := numsMap[diff]; ok {
-			return []int{j, i}
+			return []int{j + 1, i + 1}
 		}
 		numsMap[num] = i
 	}
@@ -96,4 +100,29 @@ func RemoveDuplicates() int {
 		}
 	}
 	return left + 1
+}
+
+func Merge() []int {
+	m, n := 3, 3
+	last := m + n - 1
+	//Merge array in reverse order
+	for m > 0 && n > 0 {
+		if nums1[m-1] > nums2[n-1] {
+			log.Println("*** num1last: ******", nums1[last])
+			log.Println("***  nums1[m-1]: *******", nums1[m-1])
+			nums1[last] = nums1[m-1]
+			m--
+		} else {
+			nums1[last] = nums2[n-1]
+			n--
+		}
+		last--
+	}
+	// Merge remaining elements from num2 arr
+	for n > 0 {
+		nums1[last] = nums2[n-1]
+		n--
+		last--
+	}
+	return nums1
 }
