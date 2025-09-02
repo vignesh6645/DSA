@@ -14,6 +14,7 @@ func Strhashset() {
 	log.Println("IsSubsequence: ", isSubsequence("abc", "ahbgdc"))
 	log.Println("LongestConsecutive: ", longestConsecutive([]int{1, 0, 1, 2}))
 	log.Println("productExceptSelf: ", productExceptSelf([]int{1, 2, 3, 4}))
+	log.Println("ReverseArr: ", reverseArray([]int32{1, 2, 3, 4}))
 }
 
 func productExceptSelf(nums []int) []int {
@@ -196,4 +197,17 @@ func anagram(s, t string) bool {
 	}
 
 	return true
+}
+func reverseArray(a []int32) []int32 {
+	// Write your code here
+	lengthofArr := len(a) - 1
+	res := make([]int32, len(a))
+	if lengthofArr < 1 {
+		return a
+	}
+
+	for i := lengthofArr; i >= 0; i-- {
+		res[lengthofArr-i] = a[i]
+	}
+	return res
 }
