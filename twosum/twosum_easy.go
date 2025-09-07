@@ -1,6 +1,8 @@
 package twosum
 
-import "log"
+import (
+	"log"
+)
 
 var (
 	nums   = []int{2, 3, 4}
@@ -9,10 +11,96 @@ var (
 	nums2  = []int{2, 5, 6}
 )
 
-type TwoSumInter interface {
+func TwoSumDsa() {
+	log.Println("Two_Sum_easy1: ", TwoSum_easy1())
+	log.Println("TwoSum_SortedArr: ", TwoSum_SortedArr())
+	log.Println("MoveZeroes: ", MoveZeroes())
+	log.Println("MajorityElement: ", MajorityElement())
+	log.Println("TwoSum: ", RemoveDuplicates())
+	log.Println("Merge Sorted Array: ", Merge())
+	log.Println("isPalindrome: ", isPalindrome(" "))
+	//log.Println("ThreeSum: ", threeSum([]int{-1, 0, 1, 2, -1, -4}))
+	log.Println("MaxArea: ", maxArea([]int{1, 8, 6, 2, 5, 4, 8, 3, 7}))
+
 }
 
-type TwoSum struct {
+func maxArea(height []int) int {
+	res := 0
+	left, right := 0, len(height)-1
+
+	for left < right {
+		h := 0
+		if height[left] < height[right] {
+			h = height[left]
+			left++
+		} else {
+			h = height[right]
+			right--
+		}
+
+		area := h * (right - left + 1) // careful: width must match old positions
+		if area > res {
+			res = area
+		}
+	}
+
+	return res
+}
+func Max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+/* func threeSum(nums []int) [][]int {
+	if len(nums) < 3 {
+		return nil
+	}
+	tmp := 0
+	left, right := 1, len(nums)-1
+	result := [][]int{}
+	for left != right {
+		if nums[tmp]+nums[left]+nums[right] == 0 {
+			result = append(result, []int{nums[tmp], nums[left], nums[right]})
+			left++
+			right = len(nums) - 1
+		} else if left <= len(nums)-1 && left == right {
+			tmp++
+			left++
+			right = len(nums) - 1
+		} else {
+			right--
+		}
+	}
+	return result
+} */
+
+func isPalindrome(s string) bool {
+	b := []byte(s)
+	n := 0
+
+	for i := 0; i < len(b); i++ {
+		c := b[i]
+		if (c >= '0' && c <= '9') ||
+			(c >= 'a' && c <= 'z') ||
+			(c >= 'A' && c <= 'Z') {
+			if c >= 'A' && c <= 'Z' {
+				c = c + ('a' - 'A')
+			}
+			b[n] = c
+			n++
+		}
+	}
+
+	for i, j := 0, n-1; i < j; i, j = i+1, j-1 {
+		if b[i] != b[j] {
+			return false
+		}
+	}
+
+	return true
+
 }
 
 func TwoSum_easy1() []int {
