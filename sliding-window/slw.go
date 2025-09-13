@@ -3,6 +3,7 @@ package slw
 import (
 	"fmt"
 	"log"
+	"math"
 )
 
 func SlwInit() {
@@ -11,6 +12,146 @@ func SlwInit() {
 	log.Println("CharacterReplacement: ", characterReplacement("BAAA", 0))
 	log.Println("LengthOfLongestSubstring: ", lengthOfLongestSubstring("abcabcbb"))
 	log.Println("findAnagrams: ", findAnagrams("cbaebabacd", "abc"))
+	log.Println("MinWindow: ", minWindow("ADOBECODEBANC", "ABC"))
+	log.Println("LongestSubstring: ", longestSubstring("ababbc", 2))
+	log.Println("checkInclusion: ", checkInclusion("ab", "eidbaooo"))
+	log.Println("maximumSubarraySum: ", maximumSubarraySum([]int{1, 5, 4, 2, 9, 9, 9}, 3))
+}
+
+func maximumSubarraySum(nums []int, k int) int64 {
+	return 0
+}
+
+func checkInclusion(s1 string, s2 string) bool {
+	if len(s1) > len(s2) {
+		return false
+	}
+
+	freqS1 := make([]int, 26)     // frequency of chars in s1
+	freqWindow := make([]int, 26) // frequency of current window in s2
+
+	// Build frequency for s1
+	for ind, ch := range s1 {
+		freqS1[ch-'a']++
+		freqWindow[s2[ind]-'a']++
+	}
+
+	windowSize := len(s1)
+
+	// Compare the first window
+	if equal(freqS1, freqWindow) {
+		return true
+	}
+
+	// Slide the window
+	for i := windowSize; i < len(s2); i++ {
+		freqWindow[s2[i]-'a']++            // add new char
+		freqWindow[s2[i-windowSize]-'a']-- // remove old char
+
+		if equal(freqS1, freqWindow) {
+			return true
+		}
+	}
+
+	return false
+
+}
+
+func longestSubstring(s string, k int) int {
+	maxLen := 0
+	n := len(s)
+
+	// Iterate over all possible number of unique characters (1 to 26)
+	for h := 1; h <= 26; h++ {
+		count := make([]int, 26)
+		left, right := 0, 0
+		unique, countAtLeastK := 0, 0
+
+		for right < n {
+			// Expand the window
+			idx := s[right] - 'a'
+			strIdx := string(s[right])
+			fmt.Print(strIdx)
+			if count[idx] == 0 {
+				unique++
+			}
+			count[idx]++
+			if count[idx] == k {
+				countAtLeastK++
+			}
+			right++
+
+			// Shrink the window if unique > h
+			for unique > h {
+				idxL := s[left] - 'a'
+				if count[idxL] == k {
+					countAtLeastK--
+				}
+				count[idxL]--
+				if count[idxL] == 0 {
+					unique--
+				}
+				left++
+			}
+
+			// Check if current window is valid
+			if unique == h && unique == countAtLeastK {
+				if right-left > maxLen {
+					maxLen = right - left
+				}
+			}
+		}
+	}
+
+	return maxLen
+}
+
+func minWindow(s string, t string) string {
+	if len(t) > len(s) {
+		return ""
+	}
+
+	need := make(map[byte]int)
+	for i := 0; i < len(t); i++ {
+		need[t[i]]++
+	}
+
+	have := make(map[byte]int)
+	required := len(need)
+	formed := 0
+
+	left := 0
+	minLen := math.MaxInt32
+	start := 0
+
+	for right := 0; right < len(s); right++ {
+		ch := s[right]
+		have[ch]++
+
+		if need[ch] > 0 && have[ch] == need[ch] {
+			formed++
+		}
+
+		// Try to shrink from the left
+		for formed == required {
+			if right-left+1 < minLen {
+				minLen = right - left + 1
+				start = left
+			}
+
+			leftChar := s[left]
+			have[leftChar]--
+			if need[leftChar] > 0 && have[leftChar] < need[leftChar] {
+				formed--
+			}
+			left++
+		}
+	}
+
+	if minLen == math.MaxInt32 {
+		return ""
+	}
+	return s[start : start+minLen]
 }
 
 func findAnagrams(s string, p string) []int {
@@ -59,21 +200,19 @@ func equal(a, b []int) bool {
 }
 
 func lengthOfLongestSubstring(s string) int {
-	charIndexMap := make(map[rune]int)
-	maxLength, start := 0, 0
+	lastSeen := make([]int, 128)
+	for i := range lastSeen {
+		lastSeen[i] = -1
+	}
 
-	for i, char := range s {
-		strI := string(char)
-		fmt.Print(strI)
-		if lastSeenIndex, found := charIndexMap[char]; found && lastSeenIndex >= start {
-			// Move the start pointer to the next position of the last seen duplicate character
-			start = lastSeenIndex + 1
+	maxLength, start := 0, 0
+	for i, ch := range s {
+		if lastSeen[ch] >= start {
+			start = lastSeen[ch] + 1
 		}
-		charIndexMap[char] = i
-		// Calculate the current substring length
-		currentLength := i - start + 1
-		if currentLength > maxLength {
-			maxLength = currentLength
+		lastSeen[ch] = i
+		if i-start+1 > maxLength {
+			maxLength = i - start + 1
 		}
 	}
 	return maxLength
