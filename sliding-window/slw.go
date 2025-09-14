@@ -19,7 +19,45 @@ func SlwInit() {
 }
 
 func maximumSubarraySum(nums []int, k int) int64 {
-	return 0
+	n := len(nums)
+	if k > n {
+		return 0
+	}
+
+	maxVal := 100000
+	freq := make([]int, maxVal+1)
+	var currentSum int64 = 0
+	var maxSum int64 = 0
+	distinctCount := 0
+
+	left := 0
+	for right := 0; right < n; right++ {
+		// Add nums[right]
+		if freq[nums[right]] == 0 {
+			distinctCount++
+		}
+		freq[nums[right]]++
+		currentSum += int64(nums[right])
+
+		// Shrink if window is bigger than k
+		if right-left+1 > k {
+			freq[nums[left]]--
+			if freq[nums[left]] == 0 {
+				distinctCount--
+			}
+			currentSum -= int64(nums[left])
+			left++
+		}
+
+		// Check if valid window
+		if right-left+1 == k && distinctCount == k {
+			if currentSum > maxSum {
+				maxSum = currentSum
+			}
+		}
+	}
+
+	return maxSum
 }
 
 func checkInclusion(s1 string, s2 string) bool {
