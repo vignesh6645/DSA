@@ -16,6 +16,35 @@ func SlwInit() {
 	log.Println("LongestSubstring: ", longestSubstring("ababbc", 2))
 	log.Println("checkInclusion: ", checkInclusion("ab", "eidbaooo"))
 	log.Println("maximumSubarraySum: ", maximumSubarraySum([]int{1, 5, 4, 2, 9, 9, 9}, 3))
+	log.Println("LongestOnes: ", longestOnes([]int{1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0}, 2))
+}
+
+func longestOnes(nums []int, k int) int {
+	left := 0
+	zeroesCount := 0
+	maxLen := 0
+
+	for right := 0; right < len(nums); right++ {
+		// If current element is zero, count it
+		if nums[right] == 0 {
+			zeroesCount++
+		}
+
+		// If zeroes exceed k, shrink the window from the left
+		for zeroesCount > k {
+			if nums[left] == 0 {
+				zeroesCount--
+			}
+			left++
+		}
+
+		// Update max length of valid window
+		if right-left+1 > maxLen {
+			maxLen = right - left + 1
+		}
+	}
+
+	return maxLen
 }
 
 func maximumSubarraySum(nums []int, k int) int64 {
