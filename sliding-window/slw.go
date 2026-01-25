@@ -17,6 +17,66 @@ func SlwInit() {
 	log.Println("checkInclusion: ", checkInclusion("ab", "eidbaooo"))
 	log.Println("maximumSubarraySum: ", maximumSubarraySum([]int{1, 5, 4, 2, 9, 9, 9}, 3))
 	log.Println("LongestOnes: ", longestOnes([]int{1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0}, 2))
+	log.Println("MaxScore: ", maxScore([]int{1, 79, 80, 1, 1, 1, 200, 1}, 3))
+	log.Println("minimumDeletions: ", minimumDeletions([]int{0, -4, 19, 1, 8, -2, -3, 5}))
+}
+
+func minimumDeletions(nums []int) int {
+	minIdx := 0
+	maxIdx := 0
+	for i := 0; i < len(nums)-1; i++ {
+		if nums[i] <= nums[minIdx] {
+			minIdx = i
+		}
+
+		if nums[i] >= nums[maxIdx] {
+			maxIdx = i
+		}
+	}
+
+	if maxIdx > minIdx {
+		return maxIdx + 1
+	}
+
+	return minIdx + 1
+}
+
+func maxScore(cardPoints []int, k int) int {
+	n := len(cardPoints)
+	totalSum := 0
+
+	// Step 1: Find total sum of all cards
+	for _, val := range cardPoints {
+		totalSum += val
+	}
+
+	// If k == n, we take all cards
+	if k == n {
+		return totalSum
+	}
+
+	windowSize := n - k
+
+	// Step 2: Find sum of the first window (length n - k)
+	windowSum := 0
+	for i := 0; i < windowSize; i++ {
+		windowSum += cardPoints[i]
+	}
+
+	minWindowSum := windowSum
+
+	// Step 3: Slide the window
+	for i := windowSize; i < n; i++ {
+		windowSum += cardPoints[i]            // add new element
+		windowSum -= cardPoints[i-windowSize] // remove the element that left the window
+
+		if windowSum < minWindowSum {
+			minWindowSum = windowSum
+		}
+	}
+
+	// Step 4: Subtract min subarray sum from total sum
+	return totalSum - minWindowSum
 }
 
 func longestOnes(nums []int, k int) int {
