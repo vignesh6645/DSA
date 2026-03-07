@@ -13,6 +13,7 @@ func PrefixSum() {
 	fmt.Println(res2)
 	fmt.Println(res3)
 	fmt.Println("productExceptSelf", productExceptSelf([]int{-1, 1, 0, -3, 3}))
+	fmt.Println("maxProduct", maxProduct([]int{0, 2}))
 }
 
 type NumArray struct {
@@ -67,4 +68,25 @@ func productExceptSelf(nums []int) []int {
 
 	return resultArr
 
+}
+
+func maxProduct(nums []int) int {
+	n := len(nums)
+	result := 0
+	tmpArr := make([]int, 0)
+	if n < 2 {
+		return nums[0]
+	}
+	for i := 1; i < n; i++ {
+		tmp := nums[i-1] * nums[i]
+		tmpArr = append(tmpArr, tmp)
+	}
+
+	for _, val := range tmpArr {
+		if val > result {
+			result = val
+		}
+	}
+
+	return result
 }
