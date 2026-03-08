@@ -21,12 +21,14 @@ func InitBTree() {
 	bst := BST[int]{}
 
 	//r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	nums := []int{1, 10, 2, 5, 100, 10, 10, 25, 3, 7, 200, 4, 0, 9}
-	for i := 0; i < len(nums)-1; i++ {
+	nums := []int{1, 10, 2, 5, 100, 10, 10, 25, 3, 7, 200, 4, 0, 9, 8, 6}
+	for i := 0; i < len(nums); i++ {
 		//num := r.Intn(100)
 		bst.Insert(nums[i])
 	}
 	bst.InOrder()
+	bst.PreOrder()
+	bst.PostOrder()
 	fmt.Println("IsPresent: ", bst.Search(200))
 	bst.Delete(5)
 
@@ -117,6 +119,7 @@ func (b *BST[T]) InOrder() {
 	fmt.Println()
 }
 
+// InOrder → Left, Root, Right (sorted order)
 func inOrder[T cmp.Ordered](node *Node[T]) {
 	if node == nil {
 		return
@@ -124,4 +127,53 @@ func inOrder[T cmp.Ordered](node *Node[T]) {
 	inOrder(node.Left)
 	fmt.Printf("%v > ", node.Value)
 	inOrder(node.Right)
+}
+
+// PreOrder → Root, Left, Right
+func (b *BST[T]) PreOrder() {
+	fmt.Print("PreOrder:  ")
+	preOrder(b.Root)
+	fmt.Println()
+}
+
+func preOrder[T cmp.Ordered](node *Node[T]) {
+	if node == nil {
+		return
+	}
+	fmt.Printf("%v > ", node.Value)
+	preOrder(node.Left)
+	preOrder(node.Right)
+}
+
+// PostOrder → Left, Right, Root
+func (b *BST[T]) PostOrder() {
+	fmt.Print("PostOrder: ")
+	postOrder(b.Root)
+	fmt.Println()
+}
+
+func postOrder[T cmp.Ordered](node *Node[T]) {
+	if node == nil {
+		return
+	}
+	postOrder(node.Left)
+	postOrder(node.Right)
+	fmt.Printf("%v > ", node.Value)
+}
+
+// Height returns the height of the tree
+func (b *BST[T]) Height() int {
+	return height(b.Root)
+}
+
+func height[T cmp.Ordered](node *Node[T]) int {
+	if node == nil {
+		return 0
+	}
+	leftH := height(node.Left)
+	rightH := height(node.Right)
+	if leftH > rightH {
+		return leftH + 1
+	}
+	return rightH + 1
 }
