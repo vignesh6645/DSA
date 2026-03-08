@@ -17,7 +17,7 @@ type BST[T cmp.Ordered] struct {
 	Root *Node[T]
 }
 
-func InitBTree() {
+func InitBSTree() {
 	bst := BST[int]{}
 
 	//r := rand.New(rand.NewSource(time.Now().UnixNano()))
